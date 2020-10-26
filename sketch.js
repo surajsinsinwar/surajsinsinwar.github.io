@@ -9,7 +9,7 @@ var alive = 0; // ALive individuals in current generation
 var dead = 0; // dead individuals in current generation
 var top_10 = Math.floor(population_size / 10); // 10% of total population
 var top_50 = Math.floor(population_size / 2); // 50% of total population
-var lifespan = 1000;  // lifespan of population
+var lifespan = 500;  // lifespan of population
 var maxChangeInVelocity = 0.5; // Maximum change in velocity of individuals
 var count = 0; // Total frames of current population
 
@@ -185,18 +185,21 @@ function individual(dna_of_offspring){
 
 	// calculate fitness
 	this.calc_fitness = function(){
-		this.fitness = dist(this.pos.x, this.pos.y, target.x, target.y);
-		if(this.fitness < 60){
-			this.fitness = 60;
+		var d = dist(this.pos.x, this.pos.y, target.x, target.y);
+		if(d < 60 || completed){
+			this.fitness = d / (lifespan + 1 - count);
 		}
-		if(this.fitness < 300){
-			this.fitness /= 1.5;
+		else if(this.fitness < 300){
+			this.fitness = d / ((lifespan + 1 - count) / 10);
+		}
+		else{
+			this.fitness = d;
 		}
 		if (this.crashed_obstacle){
-			this.fitness *= 2.5;
+			this.fitness *= (20 * (lifespan + 1 - count));
 		}
 		if(this.crashed){
-			this.fitness *= 2;
+			this.fitness *= (10 * (lifespan + 1 - count));
 		}
 	}
 
@@ -204,9 +207,6 @@ function individual(dna_of_offspring){
 	this.update = function(){
 		d = dist(this.pos.x,this.pos.y,target.x,target.y);
 		if(d < 60){
-            if(count < lifespan){
-            	this.fitness = (60 / (lifespan - count));
-            }
 			this.completed = true;
 			this.pos = target.copy();
 		}
@@ -214,9 +214,6 @@ function individual(dna_of_offspring){
 			this.crashed_obstacle = true;
 		}
 		if(this.pos.x < 0 || this.pos.x > width || this.pos.y < 0 || this.pos.y > height){
-			if(count < lifespan){
-            	this.fitness *= (lifespan - count);
-            }
 			this.crashed = true;
 		}
 
@@ -270,16 +267,14 @@ function dna(genes){
 
 	// crossover genes of this dna with dna of partner provided as argument
 	this.crossover =  function(partner){
-		newgenes = [];
-		var p;
-		for(var i = 0; i < lifespan; i++){
-			p = random(0, 1);
-			if(p < 0.8){
-				newgenes[i] = this.genes[i];
-			}
-			else{
-				newgenes[i] = partner.genes[i];
-			}
+		var newgenes = [];
+		var pivit = Math.floor(random(0, lifespan));
+		for(var i = 0; i < pivit; i++){
+			newgenes.push(this.genes[i]);
+		}
+
+		for(var i = pivit; i < lifespan; i++){
+			newgenes.push(partner.genes[i]);
 		}
 
 		return new dna(newgenes); // return new dna object;
