@@ -19,21 +19,21 @@ var oy // y coordinate of obstracle
 
 function setup(){
 	// initalize function of p5js framework
-	createCanvas(1200,900); 
+	createCanvas(1000,900); 
 	current_population = new population(); //create new population
 	target =  createVector(width/2, 250);  // set target
 	
 	// set obstacles veriables
 	ow = 300;
 	oh = 15;
-	ox = (width/2)-(ow/2);
-	oy = height/2;
+	ox = (target.x)-(ow/2);
+	oy = target.y + 200;
 }
 
 function draw(){
 	// Draw function iterates over and over to draw in canvus.
 
-	background(90); // background colour.
+	background(255); // background colour.
 	current_population.run(); // exicuting operations on current population
 	count++;
 	if (count == lifespan || dead + completed == population_size){
@@ -47,16 +47,18 @@ function draw(){
 		lifespan = lifespan_slider_var.value;
 		maxChangeInVelocity = change_velocity_slider_var.value;
 		mutation_rate = mutation_rate_slider_var.value;
+		updateChart();
 	}
 
 	// draw target circle
     noStroke();
-	fill(255, 100);
+	fill(100, 100);
 	circle(target.x, target.y, 100);
-	fill(200);
+	fill(100);
 	rect(ox,oy,ow,oh);
 
 	// statistics of current generation
+	fill(0);
     let mid = (width - 500) / 2;
 	print_stats(mid, 20,"Generation",generation);
 	print_stats(mid, 40,"Population",population_size);
@@ -80,6 +82,14 @@ function print_stats(x,y,label,val, gap = 500){
 }
 
 
+function mouseClicked() {
+	if(mouseX >=0 && mouseX <= width && mouseY >= 0 && mouseY <= height){
+		target.x = mouseX;
+		target.y = mouseY;
+		ox = (target.x)-(ow/2);
+		oy = target.y + 200;
+	}
+}
 
 
 // population class
@@ -236,11 +246,12 @@ function individual(dna_of_offspring){
 		noStroke();
 		if (this.completed){
 			fill(0, 255, 0);
+			this.pos = target.copy();
 		}
 		else if (this.crashed || this.crashed_obstacle){
-			fill(255,0,0,200);
+			fill(255,0,0,150);
 		}else{
-			fill(this.colr,this.colg,this.colb,150);
+			fill(this.colr,this.colg,this.colb,250);
 		}
 		rect(0, 0, 20, 10, 100);
 		pop();
