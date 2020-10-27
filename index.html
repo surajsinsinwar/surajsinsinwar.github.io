@@ -7,10 +7,137 @@
   <script language="javascript" src="p5_libraries/p5.dom.js"></script>
   <script language="javascript" src="p5_libraries/p5.sound.js"></script>
   <title> Genetic Algorithum </title>
+
+
+  <style type="text/css">
+  	.sketch{
+  		/*height: 900px;
+  		width: 1200px;*/
+  	}
+
+  	.modify{
+  		position: absolute;
+  		right: 50px;
+  		top: 150px;
+  		width: 500px;
+  	}
+
+  	.slidecontainer {
+  		position: relative;
+        width: 300px;
+        padding-top: 10px;
+    }
+
+    .slider {
+    	-webkit-appearance: none;
+    	width: 100%;
+    	height: 15px;
+    	border-radius: 5px;
+    	background: #d3d3d3;
+    	outline: none;
+    	opacity: 0.7;
+    	-webkit-transition: .2s;
+    	transition: opacity .2s;
+    }
+
+    .slider:hover {
+    	opacity: 1;
+    }
+
+    .slider::-webkit-slider-thumb {
+    	-webkit-appearance: none;
+    	appearance: none;
+    	width: 25px;
+    	height: 25px;
+    	border-radius: 50%;
+    	background: #4CAF50;
+    	cursor: pointer;
+    }
+
+    .slider::-moz-range-thumb {
+    	width: 25px;
+    	height: 25px;
+    	border-radius: 50%;
+    	background: #4CAF50;
+    	cursor: pointer;}
+  </style>
 </head>
 
 <body>
-	<script src="sketch.js"></script>
+	<div class = "sketch">
+		<script src="sketch.js"></script>
+    </div>
+
+    <div class = "modify">
+    	<div class="slidecontainer">
+    		<h3>Population Size</h3>
+    		<input type="range" min="0" max="1000" step="50" value="200" class="slider" id="population_slider">
+    		<p>Min Value: 0 - Max Value: 1000     Current Value: <span id="population_output"></span></p>
+    	</div>
+
+    	<div class="slidecontainer">
+    		<h3>Life Span</h3>
+    		<input type="range" min="100" max="1000" step="50" value="200" class="slider" id="lifespan_slider">
+    		<p>Min Value: 100 - Max Value: 1000   Current Value: <span id="lifespan_output"></span></p>
+    	</div>
+
+    	<div class="slidecontainer">
+    		<h3>Max change in velocity</h3>
+    		<input type="range" min="0.0" max="10.0" step="0.1" value="0.5" class="slider" id="change_velocity_slider">
+    		<p>Min Value: 0.0 - Max Value: 10.0   Current Value: <span id="change_velocity_output"></span></p>
+    	</div>
+
+    	<div class="slidecontainer">
+    		<h3>Mutation Rate</h3>
+    		<input type="range" min="0.0" max="1.0" step="0.01" value="0.01" class="slider" id="mutation_rate_slider">
+    		<p>Min Value: 0.0 - Max Value: 1.0   Current Value: <span id="mutation_rate_output"></span></p>
+    	</div>
+    </div>
+
+
+    <script>
+
+    		//population size
+    		var population_slider_var = document.getElementById("population_slider");
+    		var population_output_var = document.getElementById("population_output");
+    		population_output_var.innerHTML = population_size;
+    		population_slider_var.value = population_size;
+
+    		population_slider_var.oninput = function() {
+    			population_output_var.innerHTML = this.value;
+    		}
+
+    		//lifespan
+    		var lifespan_slider_var = document.getElementById("lifespan_slider");
+    		var lifespan_output_var = document.getElementById("lifespan_output");
+    		lifespan_output_var.innerHTML = lifespan;
+    		lifespan_slider_var.value = lifespan;
+
+    		lifespan_slider_var.oninput = function() {
+    			lifespan_output_var.innerHTML = this.value;
+    		}
+
+    		//max change in velocity
+    		var change_velocity_slider_var = document.getElementById("change_velocity_slider");
+    		var change_velocity_output_var = document.getElementById("change_velocity_output");
+    		change_velocity_output_var.innerHTML = maxChangeInVelocity;
+    		change_velocity_slider_var.value = maxChangeInVelocity;
+
+    		change_velocity_slider_var.oninput = function() {
+    			change_velocity_output_var.innerHTML = this.value;
+    		}
+
+    		//mutation rate
+    		var mutation_rate_slider_var = document.getElementById("mutation_rate_slider");
+    		var mutation_rate_output_var = document.getElementById("mutation_rate_output");
+    		mutation_rate_output_var.innerHTML = mutation_rate;
+    		mutation_rate_slider_var.value = mutation_rate;
+
+    		mutation_rate_slider_var.oninput = function() {
+    			mutation_rate_output_var.innerHTML = this.value;
+    		}
+    		
+    </script>
 </body>
 
 </html>
