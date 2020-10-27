@@ -2,13 +2,11 @@ var current_population;  // Current population
 var target; // target 
 var population_size = 200; // total population size
 var completed = 0; // Total number of individuals hit Target
-var mutationRate = 0.05; // mutation_rate
+var mutation_rate = 0.05; // mutation_rate
 var generation = 1; // Total individuals reached to the target in current generation
 var max_till_now = 0; // Maximum individuals reached to the target in single generation
 var alive = 0; // ALive individuals in current generation
 var dead = 0; // dead individuals in current generation
-var top_10 = Math.floor(population_size / 10); // 10% of total population
-var top_50 = Math.floor(population_size / 2); // 50% of total population
 var lifespan = 500;  // lifespan of population
 var maxChangeInVelocity = 0.5; // Maximum change in velocity of individuals
 var count = 0; // Total frames of current population
@@ -21,13 +19,13 @@ var oy // y coordinate of obstracle
 
 function setup(){
 	// initalize function of p5js framework
-	createCanvas(1300,900); 
+	createCanvas(1200,900); 
 	current_population = new population(); //create new population
 	target =  createVector(width/2, 250);  // set target
 	
 	// set obstacles veriables
 	ow = 300;
-	oh = 10;
+	oh = 15;
 	ox = (width/2)-(ow/2);
 	oy = height/2;
 }
@@ -44,6 +42,11 @@ function draw(){
 		generation++;
 		current_population.evaluate();
 		current_population.selection();
+
+		population_size = population_slider_var.value;
+		lifespan = lifespan_slider_var.value;
+		maxChangeInVelocity = change_velocity_slider_var.value;
+		mutation_rate = mutation_rate_slider_var.value;
 	}
 
 	// draw target circle
@@ -137,12 +140,13 @@ function population(){
 	// generate new or next population
 	this.selection = function(){
 		var newindividuals = [];
-
-		for(var i = 0; i < top_50; i++){
+		var top_10 = Math.floor(population_size / 10); // 10% of total population
+        var top_50 = Math.floor(population_size / 2); // 50% of total population
+		for(var i = 0; i < Math.min(top_50, population_slider_var.value - 1); i++){
 			newindividuals.push(new individual(this.individuals[i].dna));
 		}
 
-		for(var i = top_50; i < population_size; i++){
+		for(var i = Math.min(top_50, population_slider_var.value - 1); i < population_slider_var.value; i++){
 			parent1 = this.individuals[Math.floor(random(0, top_10))].dna;
 			parent2 = this.individuals[Math.floor(random(0, top_10))].dna;
 			child = parent1.crossover(parent2);
@@ -259,7 +263,7 @@ function dna(genes){
 	else{
 		this.genes = [];
 
-		for (var i = 0; i < lifespan; i++) {
+		for (var i = 0; i < lifespan_slider_var.value; i++) {
 			this.genes[i] = p5.Vector.random2D();
 			this.genes[i].setMag(random(maxChangeInVelocity));
 		}
@@ -284,7 +288,7 @@ function dna(genes){
 	// mutate genes
 	this.mutate = function(){
 		for(var i=0; i<this.genes.length; i++){
-			if(random(0, 1) < mutationRate){
+			if(random(0, 1) < mutation_rate){
 				this.genes[i] = p5.Vector.random2D();
 				this.genes[i].setMag(maxChangeInVelocity);
 			}
