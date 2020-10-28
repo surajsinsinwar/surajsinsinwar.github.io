@@ -1,4 +1,11 @@
 Watch this project live at https://surajsinsinwar.github.io/ 
+
+Reg no - 11801269
+
+Name - Suraj Singh
+
+Section - KM107
+
 This project is a visualization of a genetic algorithm using the p5 framework of javaScript. 
 
 Variables such as 
