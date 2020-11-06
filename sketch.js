@@ -2,13 +2,13 @@ var current_population;  // Current population
 var target; // target 
 var population_size = 200; // total population size
 var completed = 0; // Total number of individuals hit Target
-var mutation_rate = 0.05; // mutation_rate
+var mutation_rate = 0.01; // mutation_rate
 var generation = 1; // Total individuals reached to the target in current generation
 var max_till_now = 0; // Maximum individuals reached to the target in single generation
 var alive = 0; // ALive individuals in current generation
 var dead = 0; // dead individuals in current generation
 var lifespan = 500;  // lifespan of population
-var maxChangeInVelocity = 0.5; // Maximum change in velocity of individuals
+var maxChangeInVelocity = 0.4; // Maximum change in velocity of individuals
 var count = 0; // Total frames of current population
 
 // obstacle variables;
@@ -19,7 +19,7 @@ var oy // y coordinate of obstracle
 
 function setup(){
 	// initalize function of p5js framework
-	createCanvas(1000,900); 
+	createCanvas(1000,850); 
 	current_population = new population(); //create new population
 	target =  createVector(width/2, 250);  // set target
 	
@@ -45,7 +45,6 @@ function draw(){
 
 		population_size = population_slider_var.value;
 		lifespan = lifespan_slider_var.value;
-		maxChangeInVelocity = change_velocity_slider_var.value;
 		mutation_rate = mutation_rate_slider_var.value;
 		updateChart();
 	}
@@ -153,12 +152,12 @@ function population(){
 		var top_10 = Math.floor(population_size / 10); // 10% of total population
         var top_50 = Math.floor(population_size / 2); // 50% of total population
 		for(var i = 0; i < Math.min(top_50, population_slider_var.value - 1); i++){
-			newindividuals.push(new individual(this.individuals[i].dna));
+			newindividuals.push(new individual(this.individuals[i].chromosome));
 		}
 
 		for(var i = Math.min(top_50, population_slider_var.value - 1); i < population_slider_var.value; i++){
-			parent1 = this.individuals[Math.floor(random(0, top_10))].dna;
-			parent2 = this.individuals[Math.floor(random(0, top_10))].dna;
+			parent1 = this.individuals[Math.floor(random(0, top_10))].chromosome;
+			parent2 = this.individuals[Math.floor(random(0, top_10))].chromosome;
 			child = parent1.crossover(parent2);
 			child.mutate();
 			newindividuals.push(new individual(child));
@@ -175,7 +174,7 @@ function population(){
 
 
 // individual class
-function individual(dna_of_offspring){
+function individual(chromosome_of_offspring){
 	this.pos = createVector(width/2, height); // initial position of individual
 	this.vel = createVector(); // vel will be added to pos to change the position of individual and vel will change according to genes
 	// state of individual
@@ -187,11 +186,11 @@ function individual(dna_of_offspring){
 	this.colg = round(random(255));
 	this.colb = round(random(255));
 
-	if (dna_of_offspring) {
-		this.dna = dna_of_offspring; // if dna is given as argument
+	if (chromosome_of_offspring) {
+		this.chromosome = chromosome_of_offspring; // if chromosome is given as argument
 	}
 	else{
-		this.dna = new dna();	
+		this.chromosome = new chromosome();	
 	}
 
 	// initial fitness
@@ -232,7 +231,7 @@ function individual(dna_of_offspring){
 		}
 
 		if(!this.completed && !this.crashed && !this.crashed_obstacle){
-			this.vel.add(this.dna.genes[count]);
+			this.vel.add(this.chromosome.genes[count]);
 			this.pos.add(this.vel);
 		}
 	}
@@ -266,21 +265,21 @@ function individual(dna_of_offspring){
 
 
 
-// DNA class
-function dna(genes){
+// chromosome class
+function chromosome(genes){
 	if (genes) {
 		this.genes = genes // if genes are given as argument
 	}
 	else{
 		this.genes = [];
 
-		for (var i = 0; i < lifespan_slider_var.value; i++) {
+		for (var i = 0; i < lifespan; i++) {
 			this.genes[i] = p5.Vector.random2D();
 			this.genes[i].setMag(random(maxChangeInVelocity));
 		}
 	}
 
-	// crossover genes of this dna with dna of partner provided as argument
+	// crossover genes of this chromosome with chromosome of partner provided as argument
 	this.crossover =  function(partner){
 		var newgenes = [];
 		var pivit = Math.floor(random(0, lifespan));
@@ -292,7 +291,7 @@ function dna(genes){
 			newgenes.push(partner.genes[i]);
 		}
 
-		return new dna(newgenes); // return new dna object;
+		return new chromosome(newgenes); // return new chromosome object;
 	}
 	
 
@@ -301,7 +300,7 @@ function dna(genes){
 		for(var i=0; i<this.genes.length; i++){
 			if(random(0, 1) < mutation_rate){
 				this.genes[i] = p5.Vector.random2D();
-				this.genes[i].setMag(maxChangeInVelocity);
+				this.genes[i].setMag(maxChangeInVelocity / 2);
 			}
 		}
 	}
