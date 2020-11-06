@@ -18,22 +18,12 @@
     			lifespan_output_var.innerHTML = this.value;
     		}
 
-    		//max change in velocity
-    		var change_velocity_slider_var = document.getElementById("change_velocity_slider");
-    		var change_velocity_output_var = document.getElementById("change_velocity_output");
-    		change_velocity_output_var.innerHTML = maxChangeInVelocity;
-    		change_velocity_slider_var.value = maxChangeInVelocity;
-
-    		change_velocity_slider_var.oninput = function() {
-    			change_velocity_output_var.innerHTML = this.value;
-    		}
-
     		//mutation rate
     		var mutation_rate_slider_var = document.getElementById("mutation_rate_slider");
     		var mutation_rate_output_var = document.getElementById("mutation_rate_output");
-    		mutation_rate_output_var.innerHTML = mutation_rate;
+    		mutation_rate_output_var.innerHTML = mutation_rate * 100;
     		mutation_rate_slider_var.value = mutation_rate;
 
     		mutation_rate_slider_var.oninput = function() {
-    			mutation_rate_output_var.innerHTML = this.value;
+    			mutation_rate_output_var.innerHTML = this.value * 100;
     		}
