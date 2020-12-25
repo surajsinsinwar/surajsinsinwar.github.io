@@ -1,4 +1,4 @@
-Watch this project live at https://surajsinsinwar.github.io/  https://www.codechef.com/users/sinsinwar_code
+Watch this project live at https://surajsinsinwar.github.io/
 
 Reg no - 11801269
 
